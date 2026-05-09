@@ -105,8 +105,17 @@ def get_processor(data_params: DataParams):
     elif data_params.processor == "simple_vlm":
         from vla_foundry.models.vision_language_backbones.simple_vlm_processor import SimpleVLMProcessor
 
+        # data_params.tokenizer defaults to data_params.processor in __post_init__.
+        # When the user hasn't overridden it, "simple_vlm" isn't a tokenizer name
+        # — fall back to SimpleVLMProcessor's own default (SmolVLM2). When the user
+        # passes --data.tokenizer=<some-hf-id>, use that instead so the pipeline
+        # tokenizes with whatever LLM the VLM is being built on top of.
+        tokenizer_kwargs = {}
+        if data_params.tokenizer and data_params.tokenizer != "simple_vlm":
+            tokenizer_kwargs["tokenizer_name"] = data_params.tokenizer
         processor = SimpleVLMProcessor(
             image_size=data_params.image_size,
+            **tokenizer_kwargs,
         )
         processor.image_seq_length = data_params.img_num_tokens
         return processor
