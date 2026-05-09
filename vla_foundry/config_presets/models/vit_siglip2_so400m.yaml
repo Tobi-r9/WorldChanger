@@ -1,0 +1,8 @@
+# SigLIP 2 so400m @ 224 (.v2_webli weights via timm).
+# Native pretraining size is 224 -- no positional embedding interpolation.
+# Patch 14 -> (224/14)^2 = 256 tokens, hidden 1152.
+type: vit_hf
+hf_pretrained: vit_so400m_patch14_siglip_224.v2_webli
+hidden_dim: 1152
+img_size: 224
+projector_pixel_shuffle_factor: 1

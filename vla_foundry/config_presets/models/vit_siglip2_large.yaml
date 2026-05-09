@@ -1,0 +1,8 @@
+# SigLIP 2 large @ 224 (.v2_webli weights via timm).
+# Native pretraining size is 256; timm interpolates the pretrained position
+# embeddings to 224 on load. Patch 16 -> (224/16)^2 = 196 tokens, hidden 1024.
+type: vit_hf
+hf_pretrained: vit_large_patch16_siglip_256.v2_webli
+hidden_dim: 1024
+img_size: 224
+projector_pixel_shuffle_factor: 1

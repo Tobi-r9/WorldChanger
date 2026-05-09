@@ -1,0 +1,2 @@
+type: transformer_hf
+hf_pretrained: EleutherAI/pythia-410m
