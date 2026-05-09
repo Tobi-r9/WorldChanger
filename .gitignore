@@ -160,3 +160,9 @@ tags
 !paper_tools/**/rollouts/
 !vla_foundry/eval/eval_results/**/rollouts/
 _site/
+
+# bash output
+*.out
+*.err
+*.log
+/bash_scripts/*
