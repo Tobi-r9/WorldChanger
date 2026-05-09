@@ -26,6 +26,17 @@ class SimpleVLMProcessor:
         image_std: tuple = (0.5, 0.5, 0.5),
     ):
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+        # Some LLM tokenizers (e.g. Pythia/GPT-NeoX) don't define a pad token; fall
+        # back to eos so padding="max_length" works without altering the model.
+        if self.tokenizer.pad_token is None:
+            if self.tokenizer.eos_token is None:
+                raise ValueError(f"Tokenizer {tokenizer_name} has neither pad_token nor eos_token.")
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        # Ensure "<image>" maps to a unique id. If the tokenizer doesn't already
+        # define it (true for Pythia, GPT-NeoX, etc.), register it as an additional
+        # special token. The new id is appended at the end of the vocab.
+        if "<image>" not in self.tokenizer.get_vocab():
+            self.tokenizer.add_special_tokens({"additional_special_tokens": ["<image>"]})
         self.image_token_id = self.tokenizer.convert_tokens_to_ids("<image>")
         self.image_size = image_size
         self.image_seq_length = 0  # Will be set by get_processor from data_params.img_num_tokens
