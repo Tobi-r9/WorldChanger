@@ -104,6 +104,10 @@ class ViTParams(ModelParams):
 class ViTHFParams(TransformerHFParams):
     hidden_dim: int = field(default=768)
     projector_pixel_shuffle_factor: int = field(default=1)
+    # When set, override the timm model's native input resolution. timm interpolates
+    # the pretrained positional embeddings to the requested size on load. None = use
+    # whatever resolution is baked into the model name (e.g. 256 for *_siglip_256).
+    img_size: int | None = field(default=None)
 
 
 @register_model_params("vlm")
