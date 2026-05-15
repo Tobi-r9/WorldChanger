@@ -4,6 +4,19 @@
 
 All datasets are stored on scratch at `/e/scratch/scifi/nadimpalli2/datasets/`.
 
+### LLM Training Data
+
+- **DCLM-baseline-1.0** (from `mlfoundations/dclm-baseline-1.0-parquet`): `/e/scratch/profound/thoeppe/data/WorldChanger/dclm/`
+  - Lives under `profound/thoeppe`'s scratch (not the path noted above). Downloaded for the from-scratch LLM stage; matches the paper's Foundry-LLM-1.2B recipe (§4.1).
+  - WebDataset shards: `shards/shard_*.tar` — 50,000 shards, 3.25 TB total, uniform ~65 MB each
+  - Manifest: `shards/manifest.jsonl` — 50,000 entries × 10,000 samples/shard = 500M samples (= paper's full LLM budget)
+  - **Format inside each tar: `{uuid}.json` containing `{"text": "<raw document>"}`. Untokenized, not packed.** Tokenization happens on the fly in `vla_foundry/data/pipelines/text_untokenized.py` with `padding="max_length", truncation=True, max_length=seq_len+1`.
+  - Intended tokenizer: `HuggingFaceTB/SmolVLM2-256M-Video-Instruct` (vocab 49,280) — pass as `--data.tokenizer`. Set `--data.type text_untokenized` (not `text`).
+  - Token budget at seq_len=2048: ~0.62 T tokens with SmolVLM2 (avg ~1,175 tok/doc; paper's "1T tokens" assumes a 2048 tok/doc ceiling).
+  - Raw HF parquets (source, kept for re-conversion): `raw/` — 27,937 parquet files, 6.8 TB. Safe to delete once shards are trusted.
+  - Build script: `/e/project1/profound/thoeppe/scripts/data/01_dclm.sh` (`download` phase on login node, `convert` phase on compute).
+  - Verifier: `/e/project1/profound/thoeppe/scripts/data/check_dclm_shards.py` — all 50K shards pass deep check (members=10000, no JSON errors, no empty docs).
+
 ### VLM Training Data
 
 - **PixMo-Cap**: `/e/scratch/scifi/nadimpalli2/datasets/pixmo-cap-vla-foundry/`
