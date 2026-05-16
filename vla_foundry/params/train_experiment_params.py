@@ -128,7 +128,10 @@ class TrainExperimentParams(BaseParams):
             "robotics": {"robotics"},
             "image_caption": {"image_caption"},
             "text": {"text", "text_untokenized"},
-            "text_untokenized": {"text_untokenized"},
+            # text_untokenized is also allowed under image_caption so a VLM run can
+            # mix in a raw LLM corpus (co-training). ImageCaptionDataParams already
+            # carries a `tokenizer` field that the text_untokenized pipeline reads.
+            "text_untokenized": {"text_untokenized", "image_caption"},
         }
         for modality in self.data.dataset_modality:
             if modality not in valid_modalities:
