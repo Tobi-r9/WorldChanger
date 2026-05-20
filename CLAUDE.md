@@ -119,3 +119,19 @@ Options:
 - `--output-dir <path>` — where to save results (default: `<experiment_dir>/eval_coco/`)
 
 Script: `vla_foundry/eval/eval_coco_captions.py`
+
+### LM-Eval Harness
+
+The repo has an `lm-eval` dependency group for EleutherAI's lm-evaluation-harness.
+Use the dedicated venv for any lm-eval work:
+
+```bash
+source /e/scratch/scifi/nadimpalli2/venvs/lm_eval/bin/activate
+```
+
+Path: `/e/scratch/scifi/nadimpalli2/venvs/lm_eval`
+
+Quick check:
+```bash
+lm_eval --help
+```
